@@ -1,0 +1,30 @@
+services:
+  db:
+    image: postgres:13.18
+    restart: always
+    # Set work_mem to 128MB (example)
+    command: postgres 
+      -c work_mem=128MB 
+      -c shared_buffers=2GB 
+      -c maintenance_work_mem=1GB 
+      -c checkpoint_timeout=60min 
+      -c max_wal_size=4GB 
+      -c autovacuum=off
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydatabase
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    deploy:
+      resources:
+        limits:
+          cpus: '4.0'      # Maximum of 4 CPU cores
+          memory: 8G       # Maximum of 8GB RAM
+        reservations:
+          cpus: '2.0'      # Reserved/Guaranteed 2 CPU core
+          memory: 4G     # Reserved/Guaranteed 4GB RAM
+volumes:
+  pg_data:
